@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @unique @default(cuid())
+  username String @unique
+  password String
+  imageUrl String
+
+  createdAt DateTime @db.Timestamp() @default(now())
+  updatedAt DateTime @updatedAt()
+
+  jobs Job[]
+  contractsAsProvider Contract[] @relation("providerContract")
+  contractsAsReceiver Contract[] @relation("receiverContract")
+}
+
+model Categorie {
+  id String @unique @default(cuid())
+  title String @db.VarChar(50)
+  imageUrl String
+
+  createdAt DateTime @db.Timestamp() @default(now())
+  updatedAt DateTime @updatedAt()
+
+  jobs Job[]
+}
+
+model Job {
+  id String @unique @default(cuid())
+  title String @db.VarChar(50)
+  description String @db.Text
+  imageUrl String
+  price Int
+
+  createdAt DateTime @db.Timestamp() @default(now())
+  updatedAt DateTime @updatedAt()
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+
+  categorie Categorie @relation(references: [id], fields: [categorieId])
+  categorieId String
+}
+
+model Contract {
+  provider User @relation("providerContract", references: [id], fields: [providerId])
+  providerId String
+
+  receiver User @relation("receiverContract", references: [id], fields: [receiverId])
+  receiverId String
+
+  jobId String
+
+  startDate DateTime @db.Timestamp() @default(now())
+  endDate DateTime @db.Timestamp()
+
+  createdAt DateTime @db.Timestamp() @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@id([providerId, receiverId, jobId])
+}
