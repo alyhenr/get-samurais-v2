@@ -10,9 +10,9 @@ import * as Joi from 'joi';
     UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: 'apps/auth/.env',
       validationSchema: Joi.object({
-        PORT_AUTH: Joi.number().required(),
-        DATABASE_URL: Joi.string().required(),
+        PORT: Joi.number().required(),
       }),
     }),
   ],

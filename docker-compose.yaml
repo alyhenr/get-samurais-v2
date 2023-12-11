@@ -8,20 +8,33 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=get-samuraisv2
-    env_file:
-      - ./.env
   auth:
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
     command: bash -c "npx prisma migrate dev | npm run start:dev auth"
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/get-samuraisv2?schema=public&sslmode=disable
+    env_file:
+      - ./apps/auth/.env
     depends_on:
       postgres:
         condition: service_started
     ports:
       - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+  jobs:
+    build:
+      context: .
+      dockerfile: ./apps/jobs/Dockerfile
+      target: development
+    command: bash -c "npx prisma migrate dev | npm run start:dev jobs"
+    env_file:
+      - ./apps/jobs/.env
+    depends_on:
+      postgres:
+        condition: service_started
+    ports:
+      - '3001:3001'
     volumes:
       - .:/usr/src/app
