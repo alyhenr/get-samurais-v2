@@ -1,10 +1,23 @@
 import { Module } from '@nestjs/common';
-import { ContractsController } from './contracts.controller';
 import { ContractsService } from './contracts.service';
+import { ContractsController } from './contracts.controller';
+import { ConfigModule } from '@nestjs/config';
+import { ContractsRepository } from './contracts.repository';
+import { PrismaModule } from '../../../prisma';
+import * as Joi from 'joi';
 
 @Module({
-  imports: [],
+  imports: [
+    PrismaModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: 'apps/contracts/.env',
+      validationSchema: Joi.object({
+        PORT: Joi.number().required(),
+      }),
+    }),
+  ],
   controllers: [ContractsController],
-  providers: [ContractsService],
+  providers: [ContractsService, ContractsRepository],
 })
 export class ContractsModule {}

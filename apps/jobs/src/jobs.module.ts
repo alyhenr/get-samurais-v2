@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { JobsController } from './jobs.controller';
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
 import { JobsRepository } from './jobs.repository';
 import { PrismaModule } from '../../../prisma';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
