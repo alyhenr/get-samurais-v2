@@ -38,3 +38,18 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
+  contracts:
+    build:
+      context: .
+      dockerfile: ./apps/contracts/Dockerfile
+      target: development
+    command: bash -c "npx prisma migrate dev | npm run start:dev contracts"
+    env_file:
+      - ./apps/contracts/.env
+    depends_on:
+      postgres:
+        condition: service_started
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
