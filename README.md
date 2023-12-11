@@ -11,26 +11,26 @@ The current available microsservices are:
 - auth:
   - Port 3000
   - Endpoints:
-    - GET /,
-    - GET /:id,
-    - POST /,
-    - PATCH /:id, -
+    - GET /
+    - GET /:id
+    - POST /
+    - PATCH /:id
     - DELETE /:id
 - jobs:
   - Port 3001
   - Endpoints:
-    - GET /,
-    - GET /:id,
-    - POST /,
-    - PATCH /:id,
+    - GET /
+    - GET /:id
+    - POST /
+    - PATCH /:id
     - DELETE /:id
 - contracts:
   - Port 3002
   - Endpoints:
-    - GET /,
-    - GET /:providerId/:receiverId/:jobId,
-    - POST /,
-    - PATCH /:providerId/:receiverId/:jobId,
+    - GET /
+    - GET /:providerId/:receiverId/:jobId
+    - POST /
+    - PATCH /:providerId/:receiverId/:jobId
     - DELETE /:providerId/:receiverId/:jobId
 
 ## Technologies
