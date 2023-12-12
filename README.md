@@ -46,7 +46,7 @@ The current available microsservices are:
 
 ### 1.
 
-Create the .env files following the examples on .env.example files, in each app and in the prisma folder.
+Create the .env files following the examples on .env.example files, on each app and prisma folder.
 
 ### 2.
 
