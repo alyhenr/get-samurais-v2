@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
@@ -10,10 +14,14 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto) {
-    return this.usersRepository.create({
-      ...createUserDto,
-      password: await bcrypt.hash(createUserDto.password, 10),
-    });
+    try {
+      return this.usersRepository.create({
+        ...createUserDto,
+        password: await bcrypt.hash(createUserDto.password, 10),
+      });
+    } catch (error) {
+      throw new ConflictException('Email already in use');
+    }
   }
 
   findAll() {
@@ -24,12 +32,20 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(id, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      return this.usersRepository.update(id, updateUserDto);
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
   }
 
   remove(id: string) {
-    return this.usersRepository.remove(id);
+    try {
+      return this.usersRepository.remove(id);
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
   }
 
   async verifyUser(email: string, password: string) {
