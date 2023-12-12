@@ -3,10 +3,10 @@
 This project is a (on progress...) new version for the back-end of a project I did some months ago, in the Driven Full-Stack bootcamp.
 It aims to simulate an app to post and find jobs, where as a user, you can createa an account, post the jobs you provide and find jobs other users have posted.
 
-It's a microsservices based app using the [Nest](https://github.com/nestjs/nest) framework (Not yet deployed).
+It's a microservices based app using the [Nest](https://github.com/nestjs/nest) framework (Not yet deployed).
 Each service runs in different ports and has it's own dockerfile.
 
-The current available microsservices are:
+The current available microservices are:
 
 - auth:
   - Port 3000
