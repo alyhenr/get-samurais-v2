@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JobsService } from './jobs.service';
-import { JobsController } from './jobs.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JobsRepository } from './jobs.repository';
+import { CategoriesService } from './categories.service';
+import { CategoriesController } from './categories.controller';
 import { PrismaModule } from '../../../prisma';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE } from '@app/common';
+import { CategoriesRepository } from './categories.repository';
 import * as Joi from 'joi';
 
 @Module({
@@ -13,7 +13,7 @@ import * as Joi from 'joi';
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: 'apps/jobs/.env',
+      envFilePath: 'apps/categories/.env',
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         AUTH_HOST: Joi.string().required(),
@@ -34,7 +34,7 @@ import * as Joi from 'joi';
       },
     ]),
   ],
-  controllers: [JobsController],
-  providers: [JobsService, JobsRepository],
+  controllers: [CategoriesController],
+  providers: [CategoriesService, CategoriesRepository],
 })
-export class JobsModule {}
+export class CategoriesModule {}
