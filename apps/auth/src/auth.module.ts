@@ -26,7 +26,8 @@ import * as Joi from 'joi';
       isGlobal: true,
       envFilePath: 'apps/auth/.env',
       validationSchema: Joi.object({
-        PORT: Joi.number().required(),
+        HTTP_PORT: Joi.number().required(),
+        TCP_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.number().required(),
       }),

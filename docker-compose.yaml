@@ -2,6 +2,7 @@ version: '3.8'
 services:
   postgres:
     container_name: postgres
+    restart: always
     image: postgres:latest
     ports:
       - '5433:5432'
@@ -35,7 +36,7 @@ services:
       postgres:
         condition: service_started
     ports:
-      - '3001:3001'
+      - '3001:3002'
     volumes:
       - .:/usr/src/app
   contracts:
@@ -50,6 +51,6 @@ services:
       postgres:
         condition: service_started
     ports:
-      - '3002:3002'
+      - '3002:3003'
     volumes:
       - .:/usr/src/app

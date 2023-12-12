@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JobsRepository } from './jobs.repository';
@@ -7,8 +7,12 @@ import { JobsRepository } from './jobs.repository';
 export class JobsService {
   constructor(private readonly jobsRepository: JobsRepository) {}
 
-  create(createJobDto: CreateJobDto) {
-    return this.jobsRepository.create(createJobDto);
+  async create(createJobDto: CreateJobDto) {
+    try {
+      return await this.jobsRepository.create(createJobDto);
+    } catch (error) {
+      throw new BadRequestException('This categorie is not listed');
+    }
   }
 
   findAll() {
