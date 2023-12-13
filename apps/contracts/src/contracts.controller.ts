@@ -6,15 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ContractsService } from './contracts.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
+import { CurrentUser, JwtAuthGuard } from '@app/common';
+import { User } from '@prisma/client';
 
 @Controller('contracts')
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createContractDto: CreateContractDto) {
     return this.contractsService.create(createContractDto);
@@ -34,6 +38,7 @@ export class ContractsController {
     return this.contractsService.findOne(providerId, receiverId, jobId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':providerId/:receiverId/:jobId')
   update(
     @Param('providerId') providerId: string,
@@ -49,6 +54,7 @@ export class ContractsController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':providerId/:receiverId/:jobId')
   remove(
     @Param('providerId') providerId: string,
@@ -56,5 +62,15 @@ export class ContractsController {
     @Param('jobId') jobId: string,
   ) {
     return this.contractsService.remove(providerId, receiverId, jobId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('status/:id')
+  updateStatus(
+    @Body() { status }: { status: string },
+    @CurrentUser() user: User,
+  ) {
+    //TODO
+    console.log(status, user);
   }
 }
