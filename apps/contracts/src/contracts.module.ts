@@ -4,6 +4,7 @@ import { ContractsController } from './contracts.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ContractsRepository } from './contracts.repository';
 import { PrismaModule } from '../../../prisma';
+import { ProprosalsModule } from './proprosals/proprosals.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -16,6 +17,7 @@ import * as Joi from 'joi';
         PORT: Joi.number().required(),
       }),
     }),
+    ProprosalsModule,
   ],
   controllers: [ContractsController],
   providers: [ContractsService, ContractsRepository],

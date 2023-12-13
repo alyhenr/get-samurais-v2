@@ -51,6 +51,16 @@ model Job {
 
   categorie Category @relation(references: [id], fields: [categorieId])
   categorieId String
+
+  contracts Contract[]
+}
+
+enum ContractStatus {
+  PROPOSAL
+  ACCEPTED
+  ONGOING
+  FINISHED
+  CANCELLED
 }
 
 model Contract {
@@ -60,6 +70,7 @@ model Contract {
   receiver User @relation("receiverContract", references: [id], fields: [receiverId])
   receiverId String
 
+  job Job @relation(references: [id], fields: [jobId])
   jobId String
 
   startDate DateTime @db.Timestamp() @default(now())
@@ -67,6 +78,8 @@ model Contract {
 
   createdAt DateTime @db.Timestamp() @default(now())
   updatedAt DateTime @updatedAt()
+
+  contractStatus ContractStatus @default(PROPOSAL)
 
   @@id([providerId, receiverId, jobId])
 }
