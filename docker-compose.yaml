@@ -29,11 +29,11 @@ services:
       context: .
       dockerfile: ./apps/jobs/Dockerfile
       target: development
-    command: bash -c "npx prisma migrate dev | npm run start:dev jobs"
+    command: npm run start:dev jobs
     env_file:
       - ./apps/jobs/.env
     depends_on:
-      postgres:
+      auth:
         condition: service_started
     ports:
       - '3001:3002'
@@ -44,13 +44,28 @@ services:
       context: .
       dockerfile: ./apps/contracts/Dockerfile
       target: development
-    command: bash -c "npx prisma migrate dev | npm run start:dev contracts"
+    command: npm run start:dev contracts
     env_file:
       - ./apps/contracts/.env
     depends_on:
-      postgres:
+      auth:
         condition: service_started
     ports:
       - '3002:3003'
+    volumes:
+      - .:/usr/src/app
+  categories:
+    build:
+      context: .
+      dockerfile: ./apps/categories/Dockerfile
+      target: development
+    command: npm run start:dev categories
+    env_file:
+      - ./apps/categories/.env
+    depends_on:
+      auth:
+        condition: service_started
+    ports:
+      - '3003:3004'
     volumes:
       - .:/usr/src/app

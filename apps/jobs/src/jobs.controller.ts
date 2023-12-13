@@ -11,7 +11,8 @@ import {
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { JwtAuthGuard } from '@app/common';
+import { CurrentUser, JwtAuthGuard } from '@app/common';
+import { User } from '@prisma/client';
 
 @Controller('jobs')
 export class JobsController {
@@ -19,8 +20,9 @@ export class JobsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createJobDto: CreateJobDto) {
-    return await this.jobsService.create(createJobDto);
+  async create(@Body() createJobDto: CreateJobDto, @CurrentUser() user: User) {
+    const createJobDtoWithUserId = { ...createJobDto, userId: user.id };
+    return await this.jobsService.create(createJobDtoWithUserId);
   }
 
   @Get()
@@ -33,15 +35,20 @@ export class JobsController {
     return await this.jobsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return await this.jobsService.update(id, updateJobDto);
+  @UseGuards(JwtAuthGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateJobDto: UpdateJobDto,
+    @CurrentUser() user: User,
+  ) {
+    const updateJobDtoWithUserId = { ...updateJobDto, userId: user.id };
+    return await this.jobsService.update(id, updateJobDtoWithUserId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.jobsService.remove(id);
+  async remove(@Param('id') id: string, @CurrentUser() user: User) {
+    return await this.jobsService.remove(id, user.id);
   }
 }

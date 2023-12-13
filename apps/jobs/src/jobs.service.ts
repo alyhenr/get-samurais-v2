@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JobsRepository } from './jobs.repository';
@@ -7,7 +12,7 @@ import { JobsRepository } from './jobs.repository';
 export class JobsService {
   constructor(private readonly jobsRepository: JobsRepository) {}
 
-  async create(createJobDto: CreateJobDto) {
+  async create(createJobDto: CreateJobDto & { userId: string }) {
     try {
       return await this.jobsRepository.create(createJobDto);
     } catch (error) {
@@ -23,11 +28,24 @@ export class JobsService {
     return this.jobsRepository.findOne(id);
   }
 
-  update(id: string, updateJobDto: UpdateJobDto) {
-    return this.jobsRepository.update(id, updateJobDto);
+  async update(jobId: string, updateJobDto: UpdateJobDto & { userId: string }) {
+    this.checkPermission(jobId, updateJobDto.userId);
+
+    delete updateJobDto.userId;
+    return this.jobsRepository.update(jobId, updateJobDto);
   }
 
-  remove(id: string) {
-    return this.jobsRepository.remove(id);
+  remove(jobId: string, userId: string) {
+    this.checkPermission(jobId, userId);
+    return this.jobsRepository.remove(jobId);
+  }
+
+  private async checkPermission(jobId, userId) {
+    const job = await this.jobsRepository.findOne(jobId);
+
+    if (!job) throw new NotFoundException('Job does not exist');
+
+    if (job.userId !== userId)
+      throw new UnauthorizedException('User does not own the job offer');
   }
 }

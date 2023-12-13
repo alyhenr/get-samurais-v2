@@ -7,7 +7,7 @@ import { UpdateJobDto } from './dto/update-job.dto';
 export class JobsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createJobDto: CreateJobDto) {
+  async create(createJobDto: CreateJobDto & { userId: string }) {
     return await this.prisma.job.create({
       data: { ...createJobDto },
     });
